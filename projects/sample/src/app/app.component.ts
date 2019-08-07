@@ -17,7 +17,7 @@ import { authCodeFlowConfig } from './auth-code-flow.config';
 })
 export class AppComponent {
   constructor(private router: Router, private oauthService: OAuthService) {
-    
+
     // Remember the selected configuration
     if (sessionStorage.getItem('flow') === 'code') {
       this.configureCodeFlow();
@@ -37,9 +37,13 @@ export class AppComponent {
   private configureCodeFlow() {
 
     this.oauthService.configure(authCodeFlowConfig);
-    this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-    this.oauthService.loadDiscoveryDocumentAndTryLogin();
-
+    this.oauthService.tokenValidationHandler = new NullValidationHandler();
+    //this.oauthService.tokenValidationHandler = new JwksValidationHandler();
+    //this.oauthService.loadDiscoveryDocumentAndTryLogin();
+    this.oauthService.loadDiscoveryDocument(
+      `assets/openid-configuration.json`
+    ).then(doc => this.oauthService.tryLogin());
+    //this.oauthService.tryLogin();
     // Optional
     // this.oauthService.setupAutomaticSilentRefresh();
 
@@ -71,7 +75,7 @@ export class AppComponent {
 
   }
 
-  // 
+  //
   // Below you find further examples for configuration functions
   //
 
