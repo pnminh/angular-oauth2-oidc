@@ -29,5 +29,6 @@ export const authCodeFlowConfig: AuthConfig = {
   requireHttps: false,
   //responseType: 'id_token token',
   strictDiscoveryDocumentValidation: false,
+  disableAtHashCheck: true
   // disablePKCI: true,
 };
