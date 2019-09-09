@@ -1,6 +1,6 @@
 import { authConfig } from '../auth.config';
 import { Component, OnInit } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { OAuthService, NullValidationHandler } from 'angular-oauth2-oidc';
 import { authCodeFlowConfig } from '../auth-code-flow.config';
 
 @Component({
@@ -31,17 +31,18 @@ export class HomeComponent implements OnInit {
     sessionStorage.setItem('flow', 'implicit');
 
     this.oauthService.initLoginFlow('/some-state;p1=1;p2=2');
-      // the parameter here is optional. It's passed around and can be used after logging in
+    // the parameter here is optional. It's passed around and can be used after logging in
   }
 
   async loginCode() {
-      // Tweak config for code flow
-      this.oauthService.configure(authCodeFlowConfig);
-      await this.oauthService.loadDiscoveryDocument();
-      sessionStorage.setItem('flow', 'code');
-  
-      this.oauthService.initLoginFlow('/some-state;p1=1;p2=2');
-       // the parameter here is optional. It's passed around and can be used after logging in
+    // Tweak config for code flow
+    this.oauthService.configure(authCodeFlowConfig);
+    this.oauthService.tokenValidationHandler = new NullValidationHandler();
+    await this.oauthService.loadDiscoveryDocument();
+    sessionStorage.setItem('flow', 'code');
+
+    this.oauthService.initLoginFlow('/some-state;p1=1;p2=2');
+    // the parameter here is optional. It's passed around and can be used after logging in
   }
 
   logout() {
